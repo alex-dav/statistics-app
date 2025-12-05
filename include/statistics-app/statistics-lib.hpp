@@ -1,5 +1,5 @@
 #pragma once
 
-#include <cstdint>
+#include <vector>
 
-std::int64_t add(const std::int64_t a, const std::int64_t b);
+double calculateAvg(const std::vector<double>& numForAvg);

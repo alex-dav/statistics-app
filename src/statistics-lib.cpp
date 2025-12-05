@@ -1,5 +1,9 @@
 #include "statistics-app/statistics-lib.hpp"
 
-std::int64_t add(const std::int64_t a, const std::int64_t b) {
-    return a + b;
+double calculateAvg(const std::vector<double>& nums) {
+    double sum{ 0.0 };
+    for (double num : nums) {
+        sum += num;
+    }
+    return sum / nums.size();
 }
