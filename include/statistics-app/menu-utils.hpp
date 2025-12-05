@@ -43,35 +43,78 @@ inline void printMinNumbersMenu() {
     std::print("Enter Menu option to continue: ");
 }
 
-inline std::uint64_t getUsrMenuOption() {
-    std::uint64_t usrOption{ 0 };
-    std::cin >> usrOption;
-    return usrOption;
+inline void printExitMessage() {
+    std::println("\nThe End!");
 }
 
 inline void printInputError() {
     std::println("\nError: Invalid Menu option");
 }
 
+inline void printInvalidArgs(const std::exception& excpt) {
+    std::println("\nInvalid Argument: {}", excpt.what());
+}
+
 inline void handleAvg() {
-    std::vector<double> numsForAvg{ };
-    std::print("\nEnter at least two numbers (separated by spaces on one line): ");
-    std::string numsLine{ "" };
-    std::cin.ignore();
-    std::getline(std::cin, numsLine);
-    std::istringstream nums(numsLine);
-    double num{ 0.0 };
-    while (nums >> num) {
-        numsForAvg.push_back(num);
+    while (true) {
+        std::print("\nEnter at least two numbers (separated by spaces on one line): ");
+        std::string numsLine{ "" };
+        std::getline(std::cin, numsLine);
+        std::istringstream nums{ numsLine };
+        std::string num{ "" };
+        std::vector<double> numsForAvg{ };
+        while (true) {
+            if (nums >> num) {
+                try {
+                    double numForAvg{ std::stod(num) };
+                    numsForAvg.push_back(numForAvg);
+                }
+                catch (const std::invalid_argument& excpt) {
+                    printInvalidArgs(excpt);
+                    break;
+                }
+                catch (const std::out_of_range& excpt) {
+                    printInvalidArgs(excpt);
+                    break;
+                }
+            }
+            else if (numsForAvg.size() > 1) {
+                std::println("\nThe average is: {}", calculateAvg(numsForAvg));
+                return;
+            }
+            else {
+                break;
+            }
+        }
     }
-    std::println("\nThe average is: {}", calculateAvg(numsForAvg));
+}
+
+inline std::uint64_t getMainMenuOption() {
+    std::string usrOption{ "" };
+    std::uint64_t usrOptionInt{ 0 };
+    while (true) {
+        std::getline(std::cin, usrOption);
+        try {
+            usrOptionInt = std::stoi(usrOption);
+            break;
+        }
+        catch (const std::invalid_argument& excpt) {
+            printInvalidArgs(excpt);
+            printMainMenu();
+        }
+        catch (const std::out_of_range& excpt) {
+            printInvalidArgs(excpt);
+            printMainMenu();
+        }
+    }
+    return usrOptionInt;
 }
 
 inline void handleMainMenuInput(std::uint64_t& usrOption) {
     while ((usrOption < 1) || (usrOption > 13)) {
         printInputError();
         printMainMenu();
-        usrOption = getUsrMenuOption();
+        usrOption = getMainMenuOption();
     }
 
     switch (usrOption) {
@@ -81,8 +124,4 @@ inline void handleMainMenuInput(std::uint64_t& usrOption) {
         default:
             break;
     }
-}
-
-inline void printExitMessage() {
-    std::println("\nThe End!");
 }

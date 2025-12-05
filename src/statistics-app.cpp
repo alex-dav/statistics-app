@@ -3,14 +3,14 @@
 #include "statistics-app/menu-utils.hpp"
 
 void run() {
-    const std::uint64_t EXIT_STATE{ 13 };
+    const std::uint16_t EXIT_STATE{ 13 };
     printWelcomeMessage();
     
     std::uint64_t usrMainMenuOption{ 0 };
     do {
         printMainMenu();
-        usrMainMenuOption = getUsrMenuOption();
+        usrMainMenuOption = getMainMenuOption();
         handleMainMenuInput(usrMainMenuOption);
-    } while (usrMainMenuOption != EXIT_STATE);
+    } while (usrMainMenuOption != EXIT_STATE && !std::cin.eof());
     printExitMessage();
 }
