@@ -25,7 +25,7 @@ set_property(TARGET statistics-app PROPERTY CXX_STANDARD 23)
 
 include(CTest)
 enable_testing()
-add_executable(statistics-test tests/statistics-test.cpp)
-target_link_libraries(statistics-test PRIVATE statistics-lib)
+add_executable(statistics-tests "tests/statistics-tests.cpp")
+target_link_libraries(statistics-tests PRIVATE statistics-lib)
 
-add_test(NAME statistics-test COMMAND statistics-test)
+add_test(NAME statistics-tests COMMAND statistics-test)
