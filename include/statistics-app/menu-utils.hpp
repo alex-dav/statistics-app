@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <locale>
 
 inline void printWelcomeMessage() {
     std::println("Welcome to the Statistics app!");
@@ -14,7 +15,7 @@ inline void printWelcomeMessage() {
 inline void printMainMenu() {
     std::println("\n---------  MAIN MENU ---------");
     std::println("1) Average of Numbers");
-    std::println("2) Change Numbers by Percentage");
+    std::println("2) Change Number(s) by Percentage");
     std::println("3) Max of Numbers");
     std::println("4) Min of Numbers");
     std::println("5) Mode of Numbers");
@@ -55,7 +56,7 @@ inline void printInvalidArgs(const std::exception& excpt) {
     std::println("\nInvalid Argument: {}", excpt.what());
 }
 
-inline void handleAvg() {
+inline void handleAvgInput() {
     while (true) {
         std::print("\nEnter at least two numbers (separated by spaces on one line): ");
         std::string numsLine{ "" };
@@ -79,7 +80,7 @@ inline void handleAvg() {
                 }
             }
             else if (numsForAvg.size() > 1) {
-                std::println("\nThe average is: {}", calculateAvg(numsForAvg));
+                std::println("\nThe average is: {:L}", calculateAvg(numsForAvg)); // :L = localised formatting inserting commas
                 return;
             }
             else {
@@ -89,9 +90,68 @@ inline void handleAvg() {
     }
 }
 
+inline void handleChgByPctInput() {
+    bool validNumList{ false };
+    std::vector<double> numsForPct{ };
+    while (!validNumList) {
+        std::print("\nEnter number(s) (separated by spaces on one line): ");
+        std::string numsLine{ "" };
+        std::getline(std::cin, numsLine);
+        std::istringstream nums{ numsLine };
+        std::string num{ "" };
+        numsForPct.clear();
+        while (true) {
+            if (nums >> num) {
+                try {
+                    double numForAvg{ std::stod(num) };
+                    numsForPct.push_back(numForAvg);
+                }
+                catch (const std::invalid_argument& excpt) {
+                    printInvalidArgs(excpt);
+                    break;
+                }
+                catch (const std::out_of_range& excpt) {
+                    printInvalidArgs(excpt);
+                    break;
+                }
+            }
+            else {
+                validNumList = true;
+                break;
+            }
+        }
+    }
+
+    std::string pct{ "" };
+    double pctForNums{ 0.0 };
+    while (true) {
+        std::print("\nEnter percentage (no % sign): ");
+        std::getline(std::cin, pct);
+        try {
+            pctForNums = std::stod(pct);
+            break;
+        }
+        catch (const std::invalid_argument& excpt) {
+            printInvalidArgs(excpt);
+        }
+        catch (const std::out_of_range& excpt) {
+            printInvalidArgs(excpt);
+        }
+    }
+    changeByPct(numsForPct, pctForNums);
+    std::print("\nNumbers changed by {:L}%: ", pctForNums);
+    const std::size_t NUMS_LIST_SIZE{ numsForPct.size() };
+    for (std::size_t i{ 0 }; i < NUMS_LIST_SIZE; i++) {
+        std::print("{:L}", numsForPct.at(i));
+        if (i < (NUMS_LIST_SIZE - 1)) {
+            std::print(", ");
+        }
+    }
+    std::println();
+}
+
 inline std::int32_t getMainMenuOption() {
     std::string usrOption{ "" };
-    std::int32_t usrOptionInt{ 0 };
     while (true) {
         std::getline(std::cin, usrOption);
         if (usrOption == "") {
@@ -99,8 +159,7 @@ inline std::int32_t getMainMenuOption() {
             continue;
         }
         try {
-            usrOptionInt = std::stoi(usrOption);
-            return usrOptionInt;
+            return std::stoi(usrOption);
         }
         catch (const std::invalid_argument& excpt) {
             printInvalidArgs(excpt);
@@ -122,10 +181,10 @@ inline void handleMainMenuInput(std::int32_t& usrOption) {
 
     switch (usrOption) {
         case 1:
-            handleAvg();
+            handleAvgInput();
             break;
         case 2:
-            ;
+            handleChgByPctInput();
             break;
         default:
             break;

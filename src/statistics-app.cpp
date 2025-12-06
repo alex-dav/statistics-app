@@ -3,6 +3,7 @@
 #include "statistics-app/menu-utils.hpp"
 
 void run() {
+    std::locale::global(std::locale("")); // For localised formatting
     const std::uint16_t EXIT_STATE{ 13 };
     printWelcomeMessage();
     std::int32_t usrMainMenuOption{ 0 };
