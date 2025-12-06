@@ -28,4 +28,4 @@ enable_testing()
 add_executable(statistics-tests "tests/statistics-tests.cpp")
 target_link_libraries(statistics-tests PRIVATE statistics-lib)
 
-add_test(NAME statistics-tests COMMAND statistics-test)
+add_test(NAME statistics-tests COMMAND statistics-tests)
