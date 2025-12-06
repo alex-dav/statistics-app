@@ -5,12 +5,11 @@
 void run() {
     const std::uint16_t EXIT_STATE{ 13 };
     printWelcomeMessage();
-    
-    std::uint64_t usrMainMenuOption{ 0 };
+    std::int32_t usrMainMenuOption{ 0 };
     do {
         printMainMenu();
         usrMainMenuOption = getMainMenuOption();
         handleMainMenuInput(usrMainMenuOption);
-    } while (usrMainMenuOption != EXIT_STATE && !std::cin.eof());
+    } while ((usrMainMenuOption != EXIT_STATE) && !std::cin.eof());
     printExitMessage();
 }

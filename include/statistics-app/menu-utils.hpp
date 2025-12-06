@@ -89,14 +89,18 @@ inline void handleAvg() {
     }
 }
 
-inline std::uint64_t getMainMenuOption() {
+inline std::int32_t getMainMenuOption() {
     std::string usrOption{ "" };
-    std::uint64_t usrOptionInt{ 0 };
+    std::int32_t usrOptionInt{ 0 };
     while (true) {
         std::getline(std::cin, usrOption);
+        if (usrOption == "") {
+            std::print("\nEnter Menu option to continue: ");
+            continue;
+        }
         try {
             usrOptionInt = std::stoi(usrOption);
-            break;
+            return usrOptionInt;
         }
         catch (const std::invalid_argument& excpt) {
             printInvalidArgs(excpt);
@@ -107,10 +111,9 @@ inline std::uint64_t getMainMenuOption() {
             printMainMenu();
         }
     }
-    return usrOptionInt;
 }
 
-inline void handleMainMenuInput(std::uint64_t& usrOption) {
+inline void handleMainMenuInput(std::int32_t& usrOption) {
     while ((usrOption < 1) || (usrOption > 13)) {
         printInputError();
         printMainMenu();
@@ -120,6 +123,9 @@ inline void handleMainMenuInput(std::uint64_t& usrOption) {
     switch (usrOption) {
         case 1:
             handleAvg();
+            break;
+        case 2:
+            ;
             break;
         default:
             break;
